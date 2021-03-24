@@ -1,0 +1,9 @@
+node_modules
+
+# CDK asset staging directory
+.cdk.staging
+cdk.out
+build
+Vue/app/dist
+Vue/app/node_modules
+Vue/node_modules
