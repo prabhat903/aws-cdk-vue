@@ -9,12 +9,11 @@ const log = (...args) => {
 };
 
 AWS.config.update({
-  region: "us-east-1",
+  region: process.env.REGION || "us-east-1",
 });
 
 const docClient = new AWS.DynamoDB.DocumentClient();
-const tableName = "product";
-const table = `${tableName}-table`;
+const tableName = process.env.TABLE_NAME;
 
 const writeToDb = async (payload) => {
   const Item = {
@@ -25,7 +24,7 @@ const writeToDb = async (payload) => {
     info: { ...payload.info },
   };
   var params = {
-    TableName: table,
+    TableName: tableName,
     Item,
   };
   log("Adding a new item...", params);
@@ -48,7 +47,7 @@ const writeToDb = async (payload) => {
 const readFromDb = async ({ types = [] }) => {
   const promises = types.map((ele) => {
     var params = {
-      TableName: table,
+      TableName: tableName,
       KeyConditionExpression: "#type = :type",
       ExpressionAttributeNames: {
         "#type": "product_Type",
@@ -77,7 +76,7 @@ const readFromDb = async ({ types = [] }) => {
 
 const deleteToDb = async ({ type = "", id }) => {
   var params = {
-    TableName: table,
+    TableName: tableName,
     Key: {
       product_Type: type.toLowerCase(),
       product_Id: id,
